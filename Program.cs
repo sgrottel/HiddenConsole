@@ -8,6 +8,7 @@ namespace HiddenConsole {
     static class Program {
         private static ContextMenuStrip menu;
         private static SG.Utilities.Forms.TrayIcon icon;
+        private static ToolStripSeparator afterProcList;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,6 +18,8 @@ namespace HiddenConsole {
             Application.SetCompatibleTextRenderingDefault(false);
 
             menu = new ContextMenuStrip();
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(afterProcList = new ToolStripSeparator());
             menu.Items.Add("Exit").Click += Exit_Click;
 
             icon = new SG.Utilities.Forms.TrayIcon();
@@ -32,6 +35,10 @@ namespace HiddenConsole {
 
             SpawnedProcess sp = new SpawnedProcess();
             sp.Run(i);
+            ToolStripMenuItem pmi = new ToolStripMenuItem();
+            menu.Items.Insert(menu.Items.IndexOf(afterProcList), pmi);
+            pmi.Text = sp.Name;
+            pmi.Tag = sp;
 
             Application.Run();
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace HiddenConsole {
     class SpawnedProcess {
+        public String Name { get; private set; }
         public void Run(StartInfo s) {
             if (p != null) throw new Exception("Process already started");
             ProcessStartInfo psi = new ProcessStartInfo();
@@ -20,6 +21,7 @@ namespace HiddenConsole {
             psi.RedirectStandardInput = true;
             psi.UseShellExecute = false; // required for stream redirection
             psi.WorkingDirectory = s.WorkingDirectory;
+            Name = Path.GetFileNameWithoutExtension(s.Application);
             p = Process.Start(psi);
             p.EnableRaisingEvents = true;
             p.StandardOutput.ReadAsync(stdOutBuf, 0, stdOutBuf.Length).ContinueWith(stdOutRead);
