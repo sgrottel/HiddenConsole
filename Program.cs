@@ -25,7 +25,17 @@ namespace HiddenConsole {
             icon.Visible = true;
             icon.Icon = new System.Drawing.Icon(@"D:\dev\MegaMol\[misc]\supplement.graphics\icons\MegaMol_Fallback.ico");
 
+            StartInfo i = new StartInfo();
+            i.Application = "ipconfig";
+            i.Arguments = "/all";
+            i.WorkingDirectory = @"D:\tmp";
+
+            SpawnedProcess sp = new SpawnedProcess();
+            sp.Run(i);
+
             Application.Run();
+
+            sp.Wait();
 
             icon.Visible = false;
         }
