@@ -34,6 +34,10 @@
             this.button6 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -49,6 +53,8 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.textBox1.Location = new System.Drawing.Point(12, 26);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(348, 20);
@@ -63,6 +69,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -73,6 +80,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Start";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -83,6 +91,7 @@
             this.button3.TabIndex = 4;
             this.button3.Text = "Load";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -93,6 +102,7 @@
             this.button4.TabIndex = 5;
             this.button4.Text = "Save";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // textBox2
             // 
@@ -121,11 +131,14 @@
             this.button6.TabIndex = 11;
             this.button6.Text = "...";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // textBox3
             // 
             this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBox3.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.textBox3.Location = new System.Drawing.Point(12, 106);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(348, 20);
@@ -139,6 +152,27 @@
             this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Working Directory";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "All Executables|*.bat;*.ps1;*.exe;*.com|Scripts|*.bat;*.ps1|Applications|*.exe;*." +
+    "com|All Files|*.*";
+            this.openFileDialog1.Title = "Select Application ...";
+            // 
+            // folderBrowserDialog1
+            // 
+            this.folderBrowserDialog1.Description = "Select Working Directory ...";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "hcsi";
+            this.saveFileDialog1.Filter = "StartInfo|*.hcsi|All Files|*.*";
+            this.saveFileDialog1.Title = "Save Start Info ...";
+            // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.Filter = "StartInfo|*.hcsi|All Files|*.*";
+            this.openFileDialog2.Title = "Load Start Info ...";
             // 
             // StartInfoEditForm
             // 
@@ -176,5 +210,9 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog2;
     }
 }

@@ -21,7 +21,7 @@ namespace HiddenConsole {
             psi.RedirectStandardInput = true;
             psi.UseShellExecute = false; // required for stream redirection
             psi.WorkingDirectory = s.WorkingDirectory;
-            Name = Path.GetFileNameWithoutExtension(s.Application);
+            Name = s.Name;
             p = Process.Start(psi);
             p.EnableRaisingEvents = true;
             p.StandardOutput.ReadAsync(stdOutBuf, 0, stdOutBuf.Length).ContinueWith(stdOutRead);
