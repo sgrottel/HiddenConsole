@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Ext\TrayAreaUtility.cs" />
     <Compile Include="Ext\TrayIcon.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="OutputBuffer.cs" />
     <Compile Include="OutputLineType.cs" />
     <Compile Include="Program.cs" />

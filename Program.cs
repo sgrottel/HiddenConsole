@@ -6,9 +6,8 @@ using System.Windows.Forms;
 
 namespace HiddenConsole {
     static class Program {
-        private static ContextMenuStrip menu;
+        private static MainMenu menu;
         private static SG.Utilities.Forms.TrayIcon icon;
-        private static ToolStripSeparator afterProcList;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,14 +16,11 @@ namespace HiddenConsole {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            menu = new ContextMenuStrip();
-            menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add(afterProcList = new ToolStripSeparator());
-            menu.Items.Add("Exit").Click += Exit_Click;
+            menu = new MainMenu();
 
             icon = new SG.Utilities.Forms.TrayIcon();
             icon.ShowContextMenuOnClick = true;
-            icon.Menu = menu;
+            icon.Menu = menu.Menu;
             icon.Visible = true;
             icon.Icon = Properties.Resources.cmd;
 
@@ -35,20 +31,12 @@ namespace HiddenConsole {
 
             SpawnedProcess sp = new SpawnedProcess();
             sp.Run(i);
-            ToolStripMenuItem pmi = new ToolStripMenuItem();
-            menu.Items.Insert(menu.Items.IndexOf(afterProcList), pmi);
-            pmi.Text = sp.Name;
-            pmi.Tag = sp;
+            menu.AddProcess(sp);
 
             Application.Run();
 
-            sp.Wait();
-
+            menu.WaitForAllProcesses();
             icon.Visible = false;
-        }
-
-        private static void Exit_Click(object sender, EventArgs e) {
-            Application.Exit();
         }
     }
 }
