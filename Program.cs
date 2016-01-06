@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace HiddenConsole {
     static class Program {
-        private static MainMenu menu;
+        public static MainMenu Menu { get; private set; }
         private static SG.Utilities.Forms.TrayIcon icon;
         /// <summary>
         /// The main entry point for the application.
@@ -16,11 +16,11 @@ namespace HiddenConsole {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            menu = new MainMenu();
+            Menu = new MainMenu();
 
             icon = new SG.Utilities.Forms.TrayIcon();
             icon.ShowContextMenuOnClick = true;
-            icon.Menu = menu.Menu;
+            icon.Menu = Menu.Menu;
             icon.Visible = true;
             icon.Icon = Properties.Resources.cmd;
 
@@ -31,11 +31,11 @@ namespace HiddenConsole {
 
             SpawnedProcess sp = new SpawnedProcess();
             sp.Run(i);
-            menu.AddProcess(sp);
+            Menu.AddProcess(sp);
 
             Application.Run();
 
-            menu.WaitForAllProcesses();
+            Menu.WaitForAllProcesses();
             icon.Visible = false;
         }
     }

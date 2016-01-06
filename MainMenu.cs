@@ -13,13 +13,17 @@ namespace HiddenConsole {
         public MainMenu() {
             Menu = new ContextMenuStrip();
             Menu.Items.Add("Load and Run Start Info ..."); // TODO
-            Menu.Items.Add("Edit Start Info ..."); // TODO
+            Menu.Items.Add("Edit Start Info ...").Click += EditStartInfo_Click;
             Menu.Items.Add(new ToolStripSeparator());
             Menu.Items.Add("Options ..."); // TODO
             Menu.Items.Add(beforeProcList = new ToolStripSeparator());
             Menu.Items.Add("No Processes").Enabled = false;
             Menu.Items.Add(afterProcList = new ToolStripSeparator());
             Menu.Items.Add("Exit").Click += Exit_Click;
+        }
+        private void EditStartInfo_Click(object sender, EventArgs e) {
+            StartInfoEditForm form = new StartInfoEditForm();
+            form.Show();
         }
         public void AddProcess(SpawnedProcess proc) {
             int i1 = Menu.Items.IndexOf(beforeProcList);
