@@ -12,7 +12,7 @@ namespace HiddenConsole {
         private static ToolStripSeparator afterProcList;
         public MainMenu() {
             Menu = new ContextMenuStrip();
-            Menu.Items.Add("Load and Run Start Info ..."); // TODO
+            Menu.Items.Add("Load and Run Start Info ...").Click += Program.LoadStartInfo_Click;
             Menu.Items.Add("Edit Start Info ...").Click += EditStartInfo_Click;
             Menu.Items.Add(new ToolStripSeparator());
             Menu.Items.Add("Options ..."); // TODO
