@@ -22,6 +22,21 @@ namespace HiddenConsole {
             Menu.Items.Add("Exit").Click += Exit_Click;
         }
         public void AddProcess(SpawnedProcess proc) {
+            int i1 = Menu.Items.IndexOf(beforeProcList);
+            int i2 = Menu.Items.IndexOf(afterProcList);
+            int i = Math.Min(i1, i2);
+            int ic = Math.Max(i1, i2);
+
+            // remove non-process items from the menu
+            for (++i; i < ic; ++i) {
+                ToolStripItem tsi = Menu.Items[i];
+                if ((tsi.Tag as SpawnedProcess) == null) {
+                    Menu.Items.RemoveAt(i);
+                    i--;
+                    ic--;
+                }
+            }
+
             ToolStripMenuItem pmi = new ToolStripMenuItem();
             Menu.Items.Insert(Menu.Items.IndexOf(afterProcList), pmi);
             pmi.Text = proc.Name;
