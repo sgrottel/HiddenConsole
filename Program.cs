@@ -26,7 +26,7 @@ namespace HiddenConsole {
             icon.ShowContextMenuOnClick = true;
             icon.Menu = menu;
             icon.Visible = true;
-            icon.Icon = new System.Drawing.Icon(@"D:\dev\MegaMol\[misc]\supplement.graphics\icons\MegaMol_Fallback.ico");
+            icon.Icon = Properties.Resources.cmd;
 
             StartInfo i = new StartInfo();
             i.Application = "ipconfig";
