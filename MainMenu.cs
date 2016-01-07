@@ -26,6 +26,11 @@ namespace HiddenConsole {
             form.Show();
         }
         public void AddProcess(SpawnedProcess proc) {
+            if (Menu.InvokeRequired) {
+                Menu.Invoke(new Action<SpawnedProcess>(AddProcess), new object[] { proc });
+                return;
+            }
+
             int i1 = Menu.Items.IndexOf(beforeProcList);
             int i2 = Menu.Items.IndexOf(afterProcList);
             int i = Math.Min(i1, i2);
