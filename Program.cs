@@ -88,6 +88,11 @@ namespace HiddenConsole {
         }
         static internal void LoadStartInfo_Click(object sender, EventArgs e) {
             LoadAndStartForm lasf = new LoadAndStartForm();
+            icon.ModalDialog = lasf;
+            icon.Menu = null;
+            lasf.ShowDialog();
+            icon.ModalDialog = null;
+            icon.Menu = Menu.Menu;
         }
         internal static void Options_Click(object sender, EventArgs e) {
             OptionForm op = new OptionForm();
