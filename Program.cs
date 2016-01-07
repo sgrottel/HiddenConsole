@@ -12,11 +12,7 @@ namespace HiddenConsole {
     static class Program {
         public static MainMenu Menu { get; private set; }
         private static SG.Utilities.Forms.TrayIcon icon;
-        private static NamedPipeServerStream appServerPipe = null;
-        private static byte[] appServerPipeInBuffer;
-        private static int appServerPipeBytesReceived;
-        private static int appServerPipeWaitForBytes;
-        private static int appServerPipeReceiveMode;
+        private static IPCNamedPipe appServerPipe;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -27,29 +23,18 @@ namespace HiddenConsole {
 
             if (CheckAdminCmdLineArgs(args)) return;
 
-            try {
-                appServerPipe = new NamedPipeServerStream("HiddenConsole", PipeDirection.In, 1);
-                appServerPipeInBuffer = new byte[1024];
-                appServerPipe.WaitForConnectionAsync().ContinueWith(appServerPipeConnected);
-            } catch { }
-
-            if ((appServerPipe == null) && (args.Length > 0)) {
+            appServerPipe = new IPCNamedPipe("HiddenConsole");
+            if ((!appServerPipe.ServerPipeOpen) && (args.Length > 0)) {
                 // I am a secondary instance
                 try {
-                    using (NamedPipeClientStream npcs = new NamedPipeClientStream(".", "HiddenConsole", PipeDirection.Out)) {
-                        npcs.Connect();
-                        foreach (string arg in args) {
-                            byte[] buf = System.Text.Encoding.UTF8.GetBytes(arg);
-                            byte[] buf2 = BitConverter.GetBytes((int)buf.Length);
-                            npcs.Write(buf2, 0, 4);
-                            npcs.Write(buf, 0, buf.Length);
-                        }
-                    }
+                    appServerPipe.SendStrings(args);
                 } catch(Exception ex) {
                     MessageBox.Show("Failed to communicate parameters: " + ex.ToString(),
                         Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return;
+            } else {
+                appServerPipe.StringReceived += AppServerPipe_StringReceived;
             }
 
             Menu = new MainMenu();
@@ -76,61 +61,10 @@ namespace HiddenConsole {
             Menu.WaitForAllProcesses();
             icon.Visible = false;
         }
-        private static void appServerPipeConnected(Task t) {
-            if (!t.IsFaulted) {
-                appServerPipeBytesReceived = 0;
-                appServerPipeWaitForBytes = 4; // length of incoming string
-                appServerPipeReceiveMode = 0; // string length
-                try {
-                    if (appServerPipeInBuffer.Length < appServerPipeWaitForBytes) appServerPipeInBuffer = new byte[appServerPipeWaitForBytes];
-                    appServerPipe.ReadAsync(appServerPipeInBuffer, appServerPipeBytesReceived, appServerPipeWaitForBytes).ContinueWith(appServerPipeReceived);
-                } catch { }
-            }
-        }
-        private static void appServerPipeReceived(Task<int> dataSize) {
-            if (!dataSize.IsFaulted) {
-                appServerPipeBytesReceived += dataSize.Result;
-                if (appServerPipeBytesReceived > appServerPipeWaitForBytes) {
-                    // Does this happen? I hope not
-                    Debug.WriteLine("Ack");
-                } else if (appServerPipeBytesReceived == appServerPipeWaitForBytes) {
-                    // handle message
-                    switch (appServerPipeReceiveMode) {
-                        case 0:
-                            int strLen = BitConverter.ToInt32(appServerPipeInBuffer, 0);
-                            if (strLen > 0) {
-                                appServerPipeReceiveMode = 1; // string data
-                                appServerPipeWaitForBytes = strLen;
-                                appServerPipeBytesReceived = 0;
-                            }
-                            break;
-                        case 1:
-                            string s = System.Text.Encoding.UTF8.GetString(appServerPipeInBuffer, 0, appServerPipeWaitForBytes);
-                            Debug.WriteLine(">>>" + s);
-                            string error = TryLoadRunFile(s);
-                            if (error != null) {
-                                MessageBox.Show(error, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            appServerPipeBytesReceived = 0;
-                            appServerPipeWaitForBytes = 4; // length of incoming string
-                            appServerPipeReceiveMode = 0; // string length
-                            break;
-                    }
-                }
-            }
-
-            if (appServerPipe.IsConnected) {
-                // request more data
-                try {
-                    appServerPipe.ReadAsync(appServerPipeInBuffer, appServerPipeBytesReceived, appServerPipeWaitForBytes).ContinueWith(appServerPipeReceived);
-                } catch { }
-
-            } else {
-                // pipe broken
-                try {
-                    appServerPipe.Disconnect();
-                    appServerPipe.WaitForConnectionAsync().ContinueWith(appServerPipeConnected);
-                } catch { }
+        private static void AppServerPipe_StringReceived(object sender, string e) {
+            string error = TryLoadRunFile(e);
+            if (error != null) {
+                MessageBox.Show(error, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private static bool CheckAdminCmdLineArgs(string[] args) {

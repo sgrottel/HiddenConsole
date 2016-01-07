@@ -108,6 +108,10 @@ namespace HiddenConsole {
             }
         }
         private void Exit_Click(object sender, EventArgs e) {
+            SpawnedProcess[] ps = Processes;
+            foreach (SpawnedProcess p in ps) {
+                if (p.Running) p.RequestExit();
+            }
             Application.Exit();
         }
     }

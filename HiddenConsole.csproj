@@ -54,6 +54,7 @@
     <Compile Include="Ext\TrayAreaUtility.cs" />
     <Compile Include="Ext\TrayIcon.cs" />
     <Compile Include="FileTypeRegistration.cs" />
+    <Compile Include="IPCNamedPipe.cs" />
     <Compile Include="LoadAndStartForm.cs">
       <SubType>Form</SubType>
     </Compile>

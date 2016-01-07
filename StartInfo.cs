@@ -15,6 +15,10 @@ namespace HiddenConsole {
                 string n = Application;
                 try {
                     n = System.IO.Path.GetFileNameWithoutExtension(n);
+                    if (!String.IsNullOrWhiteSpace(Arguments)) {
+                        n += " " + Arguments;
+                        if (n.Length > 50) n = n.Substring(0, 47) + "...";
+                    }
                 } catch { }
                 return n;
             }
