@@ -45,6 +45,23 @@ namespace HiddenConsole {
             Menu.Items.Insert(Menu.Items.IndexOf(afterProcList), pmi);
             pmi.Text = proc.Name;
             pmi.Tag = proc;
+            proc.RunningChanged += Proc_RunningChanged;
+            pmi.Image = proc.Running
+                ? Properties.Resources.StatusAnnotations_Play_16xLG_color
+                : Properties.Resources.StatusAnnotations_Stop_16xLG_color;
+        }
+        private void Proc_RunningChanged(object sender, EventArgs e) {
+            if (Menu.InvokeRequired) {
+                Menu.Invoke(new EventHandler(Proc_RunningChanged), new object[] { sender, e });
+                return;
+            }
+            SpawnedProcess proc = (SpawnedProcess)sender;
+            foreach (ToolStripItem i in Menu.Items) {
+                if (i.Tag != proc) continue;
+                i.Image = proc.Running
+                    ? Properties.Resources.StatusAnnotations_Play_16xLG_color
+                    : Properties.Resources.StatusAnnotations_Stop_16xLG_color;
+            }
         }
         public SpawnedProcess[] Processes { get
             {
