@@ -27,6 +27,7 @@ namespace HiddenConsole {
                     TextReader reader = new StreamReader(openFileDialog2.FileName);
                     si = (StartInfo)ser.Deserialize(reader);
                     reader.Close();
+                    if (si == null) throw new Exception("Generic loading error");
                     try {
                         SpawnedProcess sp = new SpawnedProcess();
                         sp.Run(si);
