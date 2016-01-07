@@ -15,7 +15,7 @@ namespace HiddenConsole {
             Menu.Items.Add("Load and Run Start Info ...").Click += Program.LoadStartInfo_Click;
             Menu.Items.Add("Edit Start Info ...").Click += EditStartInfo_Click;
             Menu.Items.Add(new ToolStripSeparator());
-            Menu.Items.Add("Options ..."); // TODO
+            Menu.Items.Add("Options ...").Click += Program.Options_Click;
             Menu.Items.Add(beforeProcList = new ToolStripSeparator());
             Menu.Items.Add("No Processes").Enabled = false;
             Menu.Items.Add(afterProcList = new ToolStripSeparator());
@@ -56,11 +56,36 @@ namespace HiddenConsole {
                 return;
             }
             SpawnedProcess proc = (SpawnedProcess)sender;
+            int cntExitedProcs = 0;
             foreach (ToolStripItem i in Menu.Items) {
+                SpawnedProcess ip = i.Tag as SpawnedProcess;
+                if (ip == null) continue;
+                if (!ip.Running) cntExitedProcs++;
                 if (i.Tag != proc) continue;
                 i.Image = proc.Running
                     ? Properties.Resources.StatusAnnotations_Play_16xLG_color
                     : Properties.Resources.StatusAnnotations_Stop_16xLG_color;
+            }
+            if (cntExitedProcs > Properties.Settings.Default.KeepConsoles) {
+                // close some consoles
+                int closeConsoles = cntExitedProcs - Properties.Settings.Default.KeepConsoles;
+                List<ToolStripItem> toClose = new List<ToolStripItem>();
+                foreach (ToolStripItem i in Menu.Items) {
+                    SpawnedProcess ip = i.Tag as SpawnedProcess;
+                    if (ip == null) continue;
+                    if (!ip.Running) {
+                        if (closeConsoles > 0) {
+                            toClose.Add(i);
+                            closeConsoles--;
+                        }
+                        if (closeConsoles <= 0) {
+                            break;
+                        }
+                    }
+                }
+                foreach (ToolStripItem i in toClose) {
+                    Menu.Items.Remove(i);
+                }
             }
         }
         public SpawnedProcess[] Processes { get

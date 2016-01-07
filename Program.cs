@@ -18,6 +18,8 @@ namespace HiddenConsole {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            if (CheckAdminCmdLineArgs(args)) return;
+
             Menu = new MainMenu();
 
             icon = new SG.Utilities.Forms.TrayIcon();
@@ -41,40 +43,38 @@ namespace HiddenConsole {
             Menu.WaitForAllProcesses();
             icon.Visible = false;
         }
+        private static bool CheckAdminCmdLineArgs(string[] args) {
+            if ((args.Length == 2) && (args[0].StartsWith("?#"))) {
+                if (args[0] == "?#REG") {
+                    FileTypeRegistration.Register(args[1]);
+                } else if (args[0] == "?#UNREG") {
+                    FileTypeRegistration.Unregister(args[1]);
+                } else {
+                    MessageBox.Show("Unrecognized admin command: " + args[0], Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return true;
+            }
+            return false;
+        }
         private static void ParsingCommandLineArguments(string[] args) {
-            int argParseState = 0;
             string error = string.Empty;
             foreach (string arg in args) {
-                switch (argParseState) {
-                    case 1:
-                        argParseState = 0;
-                        break;
-                    case 2:
-                        argParseState = 0;
-                        break;
-                    case 0:
-                        if (arg.ToLower() == "?#REG") {
-                            argParseState = 1;
-                        } else if (arg.ToLower() == "?#UNREG") {
-                            argParseState = 2;
-                        } else
-                            try {
-                                XmlSerializer ser = new XmlSerializer(typeof(StartInfo));
-                                TextReader reader = new StreamReader(arg);
-                                StartInfo si = (StartInfo)ser.Deserialize(reader);
-                                reader.Close();
-                                if (si == null) throw new Exception("Generic loading error");
-                                try {
-                                    SpawnedProcess sp = new SpawnedProcess();
-                                    sp.Run(si);
-                                    Program.Menu.AddProcess(sp);
-                                } catch (Exception ex) {
-                                    error += "Failed to start process " + si.Name + ": " + ex.ToString() + "\n\n";
-                                }
-                            } catch (Exception ex) {
-                                error += "Failed to load file " + arg + ": " + ex.ToString() + "\n\n";
-                            }
-                        break;
+                // TODO: Transfer file list to other running instance
+                try {
+                    XmlSerializer ser = new XmlSerializer(typeof(StartInfo));
+                    TextReader reader = new StreamReader(arg);
+                    StartInfo si = (StartInfo)ser.Deserialize(reader);
+                    reader.Close();
+                    if (si == null) throw new Exception("Generic loading error");
+                    try {
+                        SpawnedProcess sp = new SpawnedProcess();
+                        sp.Run(si);
+                        Program.Menu.AddProcess(sp);
+                    } catch (Exception ex) {
+                        error += "Failed to start process " + si.Name + ": " + ex.ToString() + "\n\n";
+                    }
+                } catch (Exception ex) {
+                    error += "Failed to load file " + arg + ": " + ex.ToString() + "\n\n";
                 }
             }
             if (!String.IsNullOrWhiteSpace(error)) {
@@ -88,9 +88,15 @@ namespace HiddenConsole {
         }
         static internal void LoadStartInfo_Click(object sender, EventArgs e) {
             LoadAndStartForm lasf = new LoadAndStartForm();
-            icon.ModalDialog = lasf;
+        }
+        internal static void Options_Click(object sender, EventArgs e) {
+            OptionForm op = new OptionForm();
+            icon.ModalDialog = op;
             icon.Menu = null;
-            lasf.ShowDialog();
+            if (op.ShowDialog() == DialogResult.OK) {
+                Properties.Settings.Default.KeepConsoles = op.KeepConsoles;
+                Properties.Settings.Default.Save();
+            }
             icon.ModalDialog = null;
             icon.Menu = Menu.Menu;
         }
