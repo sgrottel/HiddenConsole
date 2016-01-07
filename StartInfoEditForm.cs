@@ -98,5 +98,9 @@ namespace HiddenConsole {
                 MessageBox.Show("Failed to Start " + StartInfo.Name + ": " + ex.ToString(), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void openFileDialog2_FileOk(object sender, CancelEventArgs e) {
+
+        }
     }
 }

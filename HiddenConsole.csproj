@@ -51,6 +51,12 @@
   <ItemGroup>
     <Compile Include="Ext\TrayAreaUtility.cs" />
     <Compile Include="Ext\TrayIcon.cs" />
+    <Compile Include="LoadAndStartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadAndStartForm.Designer.cs">
+      <DependentUpon>LoadAndStartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainMenu.cs" />
     <Compile Include="OutputBuffer.cs" />
     <Compile Include="OutputLineType.cs" />
@@ -64,6 +70,9 @@
     <Compile Include="StartInfoEditForm.Designer.cs">
       <DependentUpon>StartInfoEditForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="LoadAndStartForm.resx">
+      <DependentUpon>LoadAndStartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

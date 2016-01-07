@@ -173,6 +173,7 @@
             // 
             this.openFileDialog2.Filter = "StartInfo|*.hcsi|All Files|*.*";
             this.openFileDialog2.Title = "Load Start Info ...";
+            this.openFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog2_FileOk);
             // 
             // StartInfoEditForm
             // 
