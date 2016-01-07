@@ -31,16 +31,22 @@ namespace HiddenConsole {
         }
         private void button3_Click(object sender, EventArgs e) {
             if (SG.Utilities.Forms.Elevation.IsElevationRequired) {
-                SG.Utilities.Forms.Elevation.RestartElevated("?#REG " + Application.ExecutablePath);
+                if (SG.Utilities.Forms.Elevation.RestartElevated("?#REG " + Application.ExecutablePath + " " + this.Handle.ToString()) == int.MinValue) {
+                    MessageBox.Show("Failed to start elevated Process. Most likely a security conflict.",
+                        Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             } else {
-                FileTypeRegistration.Register(Application.ExecutablePath);
+                FileTypeRegistration.Register(this, Application.ExecutablePath);
             }
         }
         private void button4_Click(object sender, EventArgs e) {
             if (SG.Utilities.Forms.Elevation.IsElevationRequired) {
-                SG.Utilities.Forms.Elevation.RestartElevated("?#REG " + Application.ExecutablePath);
+                if (SG.Utilities.Forms.Elevation.RestartElevated("?#UNREG " + Application.ExecutablePath + " " + this.Handle.ToString()) == int.MinValue) {
+                    MessageBox.Show("Failed to start elevated Process. Most likely a security conflict.",
+                        Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             } else {
-                FileTypeRegistration.Unregister(Application.ExecutablePath);
+                FileTypeRegistration.Unregister(this, Application.ExecutablePath);
             }
         }
     }

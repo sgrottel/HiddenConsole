@@ -44,11 +44,17 @@ namespace HiddenConsole {
             icon.Visible = false;
         }
         private static bool CheckAdminCmdLineArgs(string[] args) {
-            if ((args.Length == 2) && (args[0].StartsWith("?#"))) {
+            if ((args.Length == 3) && (args[0].StartsWith("?#"))) {
+                NativeWindow nw = new NativeWindow();
+                long hv;
+                if (long.TryParse(args[2], out hv)) {
+                    nw.AssignHandle((IntPtr)hv);
+                }
+
                 if (args[0] == "?#REG") {
-                    FileTypeRegistration.Register(args[1]);
+                    FileTypeRegistration.Register(nw, args[1]);
                 } else if (args[0] == "?#UNREG") {
-                    FileTypeRegistration.Unregister(args[1]);
+                    FileTypeRegistration.Unregister(nw, args[1]);
                 } else {
                     MessageBox.Show("Unrecognized admin command: " + args[0], Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

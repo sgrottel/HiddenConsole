@@ -43,7 +43,9 @@ namespace SG.Utilities.Forms {
         static public bool IsElevationRequired {
             get {
                 try {
-                    RegistryKey key = Registry.ClassesRoot.OpenSubKey("*", true);
+                    RegistryKey key = Registry.ClassesRoot.OpenSubKey("*", true); // This did not work on NEOKLASSIK
+                    key.Close();
+                    key = Registry.ClassesRoot.OpenSubKey(".exe", true);
                     key.Close();
                     return false;
                 } catch {
