@@ -24,7 +24,7 @@ namespace HiddenConsole {
             icon.ShowContextMenuOnClick = true;
             icon.Menu = Menu.Menu;
             icon.Visible = true;
-            icon.Icon = Properties.Resources.cmd;
+            icon.Icon = new System.Drawing.Icon(Properties.Resources.cmd, new System.Drawing.Size(16, 16));
 
             #region for Debug only
             //StartInfo i = new StartInfo();
