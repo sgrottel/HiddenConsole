@@ -15,6 +15,9 @@ namespace HiddenConsole {
                 ext_hcsi.Close();
                 RegistryKey desc_hcsi = Registry.ClassesRoot.CreateSubKey("HiddenConsole.StartInfo");
                 desc_hcsi.SetValue(null, "HiddenConsole Start Info File");
+                RegistryKey icon_desc_hcsi = desc_hcsi.CreateSubKey("DefaultIcon");
+                icon_desc_hcsi.SetValue(null, "\"" + exePath + "\",-2");
+                icon_desc_hcsi.Close();
                 RegistryKey shell_desc_hcsi = desc_hcsi.CreateSubKey("shell");
                 RegistryKey open_shell_desc_hcsi = shell_desc_hcsi.CreateSubKey("open");
                 RegistryKey cmd_open_shell_desc_hcsi = open_shell_desc_hcsi.CreateSubKey("command");
