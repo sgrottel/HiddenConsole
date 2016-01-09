@@ -24,13 +24,15 @@ namespace HiddenConsole {
             if (CheckAdminCmdLineArgs(args)) return;
 
             appServerPipe = new IPCNamedPipe("HiddenConsole");
-            if ((!appServerPipe.ServerPipeOpen) && (args.Length > 0)) {
+            if (!appServerPipe.ServerPipeOpen) {
                 // I am a secondary instance
-                try {
-                    appServerPipe.SendStrings(args);
-                } catch(Exception ex) {
-                    MessageBox.Show("Failed to communicate parameters: " + ex.ToString(),
-                        Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (args.Length > 0) {
+                    try {
+                        appServerPipe.SendStrings(args);
+                    } catch (Exception ex) {
+                        MessageBox.Show("Failed to communicate parameters: " + ex.ToString(),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 return;
             } else {
@@ -86,7 +88,30 @@ namespace HiddenConsole {
             }
             return false;
         }
+        private static void ShowEdit(StartInfo si) {
+            if (Menu.Menu.InvokeRequired) {
+                Menu.Menu.Invoke(new Action<StartInfo>(ShowEdit), new object[] { si });
+                return;
+            }
+            StartInfoEditForm form = new StartInfoEditForm();
+            form.StartInfo = si;
+            form.Show();
+        }
         private static string TryLoadRunFile(string path) {
+            if (path.StartsWith("-Edit:")) {
+                path = path.Substring(6);
+                try {
+                    XmlSerializer ser = new XmlSerializer(typeof(StartInfo));
+                    TextReader reader = new StreamReader(path);
+                    StartInfo si = (StartInfo)ser.Deserialize(reader);
+                    reader.Close();
+                    ShowEdit(si);
+                } catch (Exception ex) {
+                    return "Failed to load file " + path + ": " + ex.ToString() + "\n\n";
+                }
+                return null;
+            }
+
             try {
                 XmlSerializer ser = new XmlSerializer(typeof(StartInfo));
                 TextReader reader = new StreamReader(path);

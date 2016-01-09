@@ -24,6 +24,11 @@ namespace HiddenConsole {
                 cmd_open_shell_desc_hcsi.SetValue(null, "\"" + exePath + "\" \"%1\"");
                 cmd_open_shell_desc_hcsi.Close();
                 open_shell_desc_hcsi.Close();
+                RegistryKey edit_shell_desc_hcsi = shell_desc_hcsi.CreateSubKey("edit");
+                RegistryKey cmd_edit_shell_desc_hcsi = edit_shell_desc_hcsi.CreateSubKey("command");
+                cmd_edit_shell_desc_hcsi.SetValue(null, "\"" + exePath + "\" \"-Edit:%1\"");
+                cmd_edit_shell_desc_hcsi.Close();
+                edit_shell_desc_hcsi.Close();
                 shell_desc_hcsi.Close();
                 desc_hcsi.Close();
 
