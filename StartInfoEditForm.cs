@@ -26,6 +26,10 @@ namespace HiddenConsole {
                 textBox3.Text = (value == null) ? "" : value.WorkingDirectory;
             }
         }
+        public String FileName {
+            get { return saveFileDialog1.FileName; }
+            set { saveFileDialog1.FileName = value; }
+        }
         public StartInfoEditForm() {
             InitializeComponent();
             Icon = Properties.Resources.cmd;

@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConsoleForm.Designer.cs">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ext\Elevation.cs" />
     <Compile Include="Ext\TrayAreaUtility.cs" />
     <Compile Include="Ext\TrayIcon.cs" />
@@ -85,6 +91,9 @@
     <Compile Include="StartInfoEditForm.Designer.cs">
       <DependentUpon>StartInfoEditForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConsoleForm.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoadAndStartForm.resx">
       <DependentUpon>LoadAndStartForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\hcsifile.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

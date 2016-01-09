@@ -88,12 +88,13 @@ namespace HiddenConsole {
             }
             return false;
         }
-        private static void ShowEdit(StartInfo si) {
+        private static void ShowEdit(string filename, StartInfo si) {
             if (Menu.Menu.InvokeRequired) {
-                Menu.Menu.Invoke(new Action<StartInfo>(ShowEdit), new object[] { si });
+                Menu.Menu.Invoke(new Action<string, StartInfo>(ShowEdit), new object[] { filename, si });
                 return;
             }
             StartInfoEditForm form = new StartInfoEditForm();
+            form.FileName = filename;
             form.StartInfo = si;
             form.Show();
         }
@@ -105,7 +106,7 @@ namespace HiddenConsole {
                     TextReader reader = new StreamReader(path);
                     StartInfo si = (StartInfo)ser.Deserialize(reader);
                     reader.Close();
-                    ShowEdit(si);
+                    ShowEdit(path, si);
                 } catch (Exception ex) {
                     return "Failed to load file " + path + ": " + ex.ToString() + "\n\n";
                 }

@@ -54,6 +54,25 @@ namespace HiddenConsole {
             pmi.Image = proc.Running
                 ? Properties.Resources.StatusAnnotations_Play_16xLG_color
                 : Properties.Resources.StatusAnnotations_Stop_16xLG_color;
+            pmi.Click += ProcessMenuItem_Click;
+        }
+        private void ProcessMenuItem_Click(object sender, EventArgs e) {
+            ToolStripMenuItem tsmi = (ToolStripMenuItem)sender;
+            SpawnedProcess p = (SpawnedProcess)tsmi.Tag;
+
+            foreach (Form f in Application.OpenForms) {
+                ConsoleForm c = f as ConsoleForm;
+                if (c == null) continue;
+                if (c.SpawnedProcess == p) {
+                    c.BringToFront();
+                    c.Focus();
+                    return;
+                }
+            }
+
+            ConsoleForm con = new ConsoleForm();
+            con.SpawnedProcess = p;
+            con.Show();
         }
         private void Proc_RunningChanged(object sender, EventArgs e) {
             if (Menu.InvokeRequired) {

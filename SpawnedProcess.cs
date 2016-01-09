@@ -96,9 +96,13 @@ namespace HiddenConsole {
             }
         }
         private Process p = null;
-
         internal void RequestExit() {
             if (p != null) p.Kill(); // not nice, but I do not care
+        }
+        internal void EnterLine(string cmd) {
+            try {
+                p.StandardInput.WriteLine(cmd);
+            } catch { }
         }
     }
 }
